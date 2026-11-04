@@ -23,6 +23,11 @@ func _ready() -> void:
 	_maybe_capture()
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		get_tree().quit()
+
+
 func _spawn_props() -> void:
 	# Два дерева на одной вертикали с героем — сразу видно, как работает Y-sort:
 	# верхнее перекрывается героем, нижнее перекрывает его.
