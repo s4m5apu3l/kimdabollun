@@ -1,14 +1,9 @@
 extends Node2D
-## Корневая сцена: собирает арену, героя и заглушки окружения,
+## Корневая сцена: собирает поляну, героя и декор,
 ## раздаёт границы камеры и умеет делать скриншоты для проверки (--shot).
 
-const PROP_TREE := Vector2i(96, 128)
-const PROP_TREE_SMALL := Vector2i(64, 96)
-const PROP_ROCK := Vector2i(32, 32)
-
-const COLOR_TREE := Color("28402f")
-const COLOR_TREE_SMALL := Color("314c38")
-const COLOR_ROCK := Color("4a4f58")
+const SPRITE_PINE := preload("res://assets/sprites/pine_cold.png")
+const SPRITE_CHEST := preload("res://assets/sprites/chest.png")
 
 var _arena: Arena
 var _player: Player
@@ -19,7 +14,7 @@ func _ready() -> void:
 	_player = $World/Player
 
 	_player.set_bounds(_arena.playable_rect(), Rect2(Vector2.ZERO, _arena.size_px()))
-	_spawn_props()
+	_spawn_decor()
 	_maybe_capture()
 
 
@@ -28,28 +23,24 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_tree().quit()
 
 
-func _spawn_props() -> void:
-	# Два дерева на одной вертикали с героем — сразу видно, как работает Y-sort:
-	# верхнее перекрывается героем, нижнее перекрывает его.
-	_add_prop(Vector2(640.0, 330.0), PROP_TREE, COLOR_TREE)
-	_add_prop(Vector2(672.0, 428.0), PROP_TREE_SMALL, COLOR_TREE_SMALL)
-	_add_prop(Vector2(470.0, 300.0), PROP_ROCK, COLOR_ROCK)
-	_add_prop(Vector2(830.0, 470.0), PROP_ROCK, COLOR_ROCK)
+func _spawn_decor() -> void:
+	# Отдельные деревья внутри поляны: с героем они делят Y-sort,
+	# поэтому получается честное перекрытие по глубине.
+	_add_sprite(SPRITE_PINE, Vector2(120.0, 100.0))
+	_add_sprite(SPRITE_PINE, Vector2(250.0, 85.0))
+	_add_sprite(SPRITE_PINE, Vector2(410.0, 105.0))
+	_add_sprite(SPRITE_PINE, Vector2(175.0, 205.0))
+	_add_sprite(SPRITE_PINE, Vector2(430.0, 215.0))
+	_add_sprite(SPRITE_CHEST, Vector2(300.0, 158.0))
 
 
-func _add_prop(at: Vector2, size: Vector2i, color: Color) -> void:
+func _add_sprite(texture: Texture2D, at: Vector2) -> void:
 	var sprite := Sprite2D.new()
-	sprite.texture = _solid_texture(size, color)
+	sprite.texture = texture
 	sprite.position = at
-	# Точка опоры — нижняя кромка, иначе Y-sort будет врать.
-	sprite.offset = Vector2(0.0, -float(size.y) * 0.5)
+	# Точка опоры — нижняя кромка спрайта.
+	sprite.offset = Vector2(0.0, -float(texture.get_height()) * 0.5)
 	$World.add_child(sprite)
-
-
-func _solid_texture(size: Vector2i, color: Color) -> ImageTexture:
-	var img := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
-	img.fill(color)
-	return ImageTexture.create_from_image(img)
 
 
 func _maybe_capture() -> void:
@@ -60,8 +51,8 @@ func _maybe_capture() -> void:
 	await get_tree().create_timer(0.5).timeout
 	_save_shot("res://shot.png")
 
-	# Второй кадр — у стены: проверяем границы комнаты и камеры.
-	var corner := _arena.playable_rect().position + Vector2(60.0, 70.0)
+	# Второй кадр — у края поляны: видно лес и границу камеры.
+	var corner := _arena.playable_rect().position + Vector2(30.0, 40.0)
 	_player.global_position = corner
 	_player.camera.reset_smoothing()
 	await get_tree().process_frame
