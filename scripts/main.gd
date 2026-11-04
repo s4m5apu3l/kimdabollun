@@ -39,21 +39,21 @@ func _spawn_decor() -> void:
 	# Верхний и нижний край.
 	var x := -12.0
 	while x < size.x + 12.0:
-		_add_sprite(_pick_tree(rng), Vector2(x + rng.randf_range(-4.0, 4.0), rng.randf_range(10.0, 18.0)), NIGHT)
-		_add_sprite(_pick_tree(rng), Vector2(x + rng.randf_range(-6.0, 6.0), size.y + rng.randf_range(-8.0, 2.0)), NIGHT)
-		x += rng.randf_range(16.0, 26.0)
+		_add_sprite(_pick_tree(rng), Vector2(x + rng.randf_range(-4.0, 4.0), rng.randf_range(20.0, 34.0)), NIGHT)
+		_add_sprite(_pick_tree(rng), Vector2(x + rng.randf_range(-6.0, 6.0), size.y + rng.randf_range(-16.0, 4.0)), NIGHT)
+		x += rng.randf_range(30.0, 48.0)
 
 	# Боковые края.
 	var y := 18.0
 	while y < size.y - 10.0:
-		_add_sprite(_pick_tree(rng), Vector2(rng.randf_range(6.0, 15.0), y), NIGHT)
-		_add_sprite(_pick_tree(rng), Vector2(size.x - rng.randf_range(6.0, 15.0), y), NIGHT)
-		y += rng.randf_range(16.0, 24.0)
+		_add_sprite(_pick_tree(rng), Vector2(rng.randf_range(12.0, 30.0), y), NIGHT)
+		_add_sprite(_pick_tree(rng), Vector2(size.x - rng.randf_range(12.0, 30.0), y), NIGHT)
+		y += rng.randf_range(28.0, 42.0)
 
 	# Пара елей внутри поляны — для глубины сцены.
-	_add_sprite(SPRITE_TREE, Vector2(62.0, 118.0))
-	_add_sprite(SPRITE_PINE, Vector2(318.0, 132.0))
-	_add_sprite(SPRITE_CHEST, Vector2(206.0, 96.0))
+	_add_sprite(SPRITE_TREE, Vector2(150.0, 250.0))
+	_add_sprite(SPRITE_PINE, Vector2(760.0, 300.0))
+	_add_sprite(SPRITE_CHEST, Vector2(520.0, 220.0))
 
 
 func _pick_tree(rng: RandomNumberGenerator) -> Texture2D:
@@ -78,7 +78,17 @@ func _maybe_capture() -> void:
 	await get_tree().create_timer(0.5).timeout
 	_save_shot("res://shot.png")
 
-	# Второй кадр — у края поляны: видно лес и границу камеры.
+	# Второй кадр — в движении: проверяем, что анимация ходьбы переключается.
+	Input.action_press("move_right")
+	await get_tree().create_timer(0.6).timeout
+	_save_shot("res://shot_walk.png")
+	Input.action_release("move_right")
+	Input.action_press("move_down")
+	await get_tree().create_timer(0.5).timeout
+	_save_shot("res://shot_walk_down.png")
+	Input.action_release("move_down")
+
+	# Третий кадр — у края поляны: видно лес и границу камеры.
 	var corner := _arena.playable_rect().position + Vector2(30.0, 40.0)
 	_player.global_position = corner
 	_player.camera.reset_smoothing()

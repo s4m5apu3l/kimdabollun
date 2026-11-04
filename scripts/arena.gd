@@ -4,14 +4,14 @@ class_name Arena
 ## Фон — сплошной тёмный лес, поверх — трава поляны, по краю стоят отдельные ели.
 ## Так камера никогда не показывает пустоту, а лес читается как стена вокруг поляны.
 
-const TILE := 16
+const TILE := 32
 const TEX_GRASS := preload("res://assets/sprites/grass.png")
 const TEX_FOREST := preload("res://assets/sprites/forest.png")
 
 ## Насколько фон-лес больше поляны (рисуется с запасом во все стороны).
 const FOREST_MARGIN := 256
 
-@export var room_tiles := Vector2i(24, 13)
+@export var room_tiles := Vector2i(30, 17)
 @export var treeline_tiles := 1
 
 var _wall_body: StaticBody2D
