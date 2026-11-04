@@ -1,13 +1,16 @@
 extends Node2D
-## Корневая сцена: собирает поляну, героя и декор,
+## Корневая сцена: собирает арену, героя и декор,
 ## раздаёт границы камеры и умеет делать скриншоты для проверки (--shot).
 
-const SPRITE_PINE := preload("res://assets/sprites/tree_big_cold.png")
-const SPRITE_CHEST := preload("res://assets/sprites/chest.png")
-const SPRITE_TREE := preload("res://assets/sprites/tree_big.png")
+const SPRITE_SHADOW := preload("res://assets/sprites/shadow_blob.png")
 
-## Затемнение леса по краю: центр поляны должен читаться как освещённый.
-const NIGHT := Color(0.42, 0.48, 0.56, 1.0)
+## Декор из Tiny Swords: [файл, позиция ступней].
+const DECO := [
+	["deco_18.png", Vector2(300.0, 240.0)],
+	["deco_16.png", Vector2(760.0, 210.0)],
+	["deco_17.png", Vector2(700.0, 430.0)],
+	["deco_09.png", Vector2(170.0, 430.0)],
+]
 
 var _arena: Arena
 var _player: Player
@@ -28,45 +31,24 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _spawn_decor() -> void:
-	# Отдельные деревья внутри поляны: с героем они делят Y-sort,
-	# поэтому получается честное перекрытие по глубине.
-	# Верхний край — стена леса отдельными высокими елями.
-	# Они в том же Y-sorted узле, что и герой, поэтому он честно уходит за них.
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 7
-	var size := _arena.size_px()
-
-	# Верхний и нижний край.
-	var x := -12.0
-	while x < size.x + 12.0:
-		_add_sprite(_pick_tree(rng), Vector2(x + rng.randf_range(-4.0, 4.0), rng.randf_range(-10.0, 2.0)), NIGHT)
-		_add_sprite(_pick_tree(rng), Vector2(x + rng.randf_range(-6.0, 6.0), size.y + rng.randf_range(-16.0, 4.0)), NIGHT)
-		x += rng.randf_range(30.0, 48.0)
-
-	# Боковые края.
-	var y := 18.0
-	while y < size.y - 10.0:
-		_add_sprite(_pick_tree(rng), Vector2(rng.randf_range(12.0, 30.0), y), NIGHT)
-		_add_sprite(_pick_tree(rng), Vector2(size.x - rng.randf_range(12.0, 30.0), y), NIGHT)
-		y += rng.randf_range(28.0, 42.0)
-
-	# Пара елей внутри поляны — для глубины сцены.
-	_add_sprite(SPRITE_TREE, Vector2(150.0, 250.0))
-	_add_sprite(SPRITE_PINE, Vector2(760.0, 300.0))
-	_add_sprite(SPRITE_CHEST, Vector2(520.0, 220.0))
+	for item in DECO:
+		var path: String = "res://assets/tiny-swords/deco/" + String(item[0])
+		_add_prop(load(path), item[1])
 
 
-func _pick_tree(rng: RandomNumberGenerator) -> Texture2D:
-	return SPRITE_TREE if rng.randi() % 2 == 0 else SPRITE_PINE
+func _add_prop(texture: Texture2D, at: Vector2) -> void:
+	# Контактная тень, затем сам объект: объект «стоит» на земле.
+	var shadow := Sprite2D.new()
+	shadow.texture = SPRITE_SHADOW
+	shadow.position = at
+	shadow.offset = Vector2(0.0, -6.0)
+	shadow.scale = Vector2(maxf(0.5, float(texture.get_width()) / 64.0), 1.0)
+	$World.add_child(shadow)
 
-
-func _add_sprite(texture: Texture2D, at: Vector2, tint: Color = Color.WHITE) -> void:
 	var sprite := Sprite2D.new()
 	sprite.texture = texture
 	sprite.position = at
-	# Точка опоры — нижняя кромка спрайта.
 	sprite.offset = Vector2(0.0, -float(texture.get_height()) * 0.5)
-	sprite.modulate = tint
 	$World.add_child(sprite)
 
 
@@ -78,18 +60,12 @@ func _maybe_capture() -> void:
 	await get_tree().create_timer(0.5).timeout
 	_save_shot("res://shot.png")
 
-	# Второй кадр — в движении: проверяем, что анимация ходьбы переключается.
 	Input.action_press("move_right")
 	await get_tree().create_timer(0.6).timeout
 	_save_shot("res://shot_walk.png")
 	Input.action_release("move_right")
-	Input.action_press("move_down")
-	await get_tree().create_timer(0.5).timeout
-	_save_shot("res://shot_walk_down.png")
-	Input.action_release("move_down")
 
-	# Третий кадр — у края поляны: видно лес и границу камеры.
-	var corner := _arena.playable_rect().position + Vector2(30.0, 40.0)
+	var corner := _arena.playable_rect().position + Vector2(40.0, 40.0)
 	_player.global_position = corner
 	_player.camera.reset_smoothing()
 	await get_tree().process_frame
