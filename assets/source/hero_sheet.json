@@ -1,0 +1,109 @@
+{
+  "character": {
+    "id": "2eeb0b14-9aa5-4a16-bb2b-e10b327c3bb8",
+    "name": "Idle",
+    "prompt": "Pixel art character, chibi proportions (3 heads tall), 1px dark outline, limited palette, top-down 3/4 view. Young wanderer with messy spiky black hair and bangs over the forehead, pale skin, dark eyes, calm serious expression. Dark gray-blue high scarf collar, long charcoal gray coat with lighter gray folds and wide sleeves, brown leather wrist wraps, brown leather belt with a silver buckle, diagonal brown leather chest strap with a metal buckle, black trousers, brown leather boots with ankle straps. Olive-brown bulky backpack with visible shoulder straps. Soft ellipse shadow under the feet. Transparent background.",
+    "size": {
+      "width": 64,
+      "height": 64
+    },
+    "directions": 8,
+    "view": "high top-down"
+  },
+  "spritesheet": {
+    "path": "Pixel_art_character_chib-Idle.png",
+    "cell_size": {
+      "width": 96,
+      "height": 96
+    },
+    "sheet_size": {
+      "width": 768,
+      "height": 864
+    },
+    "columns": 8,
+    "pivot": "cell-center",
+    "rows": [
+      {
+        "row": 0,
+        "type": "rotations",
+        "frame_count": 8,
+        "directions": [
+          "south",
+          "south-east",
+          "east",
+          "north-east",
+          "north",
+          "north-west",
+          "west",
+          "south-west"
+        ]
+      },
+      {
+        "row": 1,
+        "type": "animation",
+        "frame_count": 6,
+        "animation": "Running",
+        "animation_group_id": "13d084f3-7f8f-4bc6-842d-6dd5e3eb89bd",
+        "direction": "south"
+      },
+      {
+        "row": 2,
+        "type": "animation",
+        "frame_count": 6,
+        "animation": "Running",
+        "animation_group_id": "13d084f3-7f8f-4bc6-842d-6dd5e3eb89bd",
+        "direction": "south-east"
+      },
+      {
+        "row": 3,
+        "type": "animation",
+        "frame_count": 6,
+        "animation": "Running",
+        "animation_group_id": "13d084f3-7f8f-4bc6-842d-6dd5e3eb89bd",
+        "direction": "east"
+      },
+      {
+        "row": 4,
+        "type": "animation",
+        "frame_count": 6,
+        "animation": "Running",
+        "animation_group_id": "13d084f3-7f8f-4bc6-842d-6dd5e3eb89bd",
+        "direction": "north-east"
+      },
+      {
+        "row": 5,
+        "type": "animation",
+        "frame_count": 6,
+        "animation": "Running",
+        "animation_group_id": "13d084f3-7f8f-4bc6-842d-6dd5e3eb89bd",
+        "direction": "north"
+      },
+      {
+        "row": 6,
+        "type": "animation",
+        "frame_count": 6,
+        "animation": "Running",
+        "animation_group_id": "13d084f3-7f8f-4bc6-842d-6dd5e3eb89bd",
+        "direction": "north-west"
+      },
+      {
+        "row": 7,
+        "type": "animation",
+        "frame_count": 6,
+        "animation": "Running",
+        "animation_group_id": "13d084f3-7f8f-4bc6-842d-6dd5e3eb89bd",
+        "direction": "west"
+      },
+      {
+        "row": 8,
+        "type": "animation",
+        "frame_count": 6,
+        "animation": "Running",
+        "animation_group_id": "13d084f3-7f8f-4bc6-842d-6dd5e3eb89bd",
+        "direction": "south-west"
+      }
+    ]
+  },
+  "export_version": "1.0",
+  "export_date": "2026-11-04T06:58:43.064474+00:00"
+}

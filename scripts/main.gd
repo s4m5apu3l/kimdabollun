@@ -39,7 +39,7 @@ func _spawn_decor() -> void:
 	# Верхний и нижний край.
 	var x := -12.0
 	while x < size.x + 12.0:
-		_add_sprite(_pick_tree(rng), Vector2(x + rng.randf_range(-4.0, 4.0), rng.randf_range(20.0, 34.0)), NIGHT)
+		_add_sprite(_pick_tree(rng), Vector2(x + rng.randf_range(-4.0, 4.0), rng.randf_range(-10.0, 2.0)), NIGHT)
 		_add_sprite(_pick_tree(rng), Vector2(x + rng.randf_range(-6.0, 6.0), size.y + rng.randf_range(-16.0, 4.0)), NIGHT)
 		x += rng.randf_range(30.0, 48.0)
 

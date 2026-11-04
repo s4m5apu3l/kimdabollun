@@ -7,6 +7,18 @@ class_name Arena
 const TILE := 32
 const TEX_GRASS := preload("res://assets/sprites/grass.png")
 const TEX_FOREST := preload("res://assets/sprites/forest.png")
+const TEX_CLIFF := preload("res://assets/sprites/cliff.png")
+const TEX_SHADOW := preload("res://assets/sprites/shadow.png")
+
+## Высота каменного обрыва позади поляны и глубина его тени на траве.
+const CLIFF_HEIGHT := 32.0
+
+## Сколько леса показываем над обрывом.
+const ART_ABOVE := 64.0
+const SHADOW_DEPTH := 40.0
+
+## Затемнение фонового леса: поляна должна читаться светлее окружения.
+const FOREST_TINT := Color(0.42, 0.48, 0.56, 1.0)
 
 ## Насколько фон-лес больше поляны (рисуется с запасом во все стороны).
 const FOREST_MARGIN := 256
@@ -23,7 +35,7 @@ func size_px() -> Vector2:
 
 ## Границы камеры — ровно поляна.
 func camera_rect() -> Rect2:
-	return Rect2(Vector2.ZERO, size_px())
+	return Rect2(Vector2(0.0, -ART_ABOVE), Vector2(size_px().x, size_px().y + ART_ABOVE))
 
 
 ## Зона, по которой можно ходить: всё, кроме полосы деревьев по краю.
@@ -39,15 +51,29 @@ func _ready() -> void:
 	_add_tiled(
 		TEX_FOREST,
 		Vector2(-FOREST_MARGIN, -FOREST_MARGIN),
-		s + Vector2(FOREST_MARGIN, FOREST_MARGIN) * 2.0
+		s + Vector2(FOREST_MARGIN, FOREST_MARGIN) * 2.0,
+		FOREST_TINT
 	)
 	# Сама поляна.
 	_add_tiled(TEX_GRASS, Vector2.ZERO, s)
 
+	# Обрыв позади поляны: у стены видно лицо — это и даёт 3/4.
+	_add_tiled(TEX_CLIFF, Vector2.ZERO, Vector2(s.x, CLIFF_HEIGHT))
+
+	# Тень от обрыва, падающая на траву.
+	var shadow := Sprite2D.new()
+	shadow.texture = TEX_SHADOW
+	shadow.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+	shadow.region_enabled = true
+	shadow.region_rect = Rect2(Vector2.ZERO, Vector2(s.x, SHADOW_DEPTH))
+	shadow.centered = false
+	shadow.position = Vector2(0.0, CLIFF_HEIGHT)
+	add_child(shadow)
+
 	_build_walls()
 
 
-func _add_tiled(texture: Texture2D, at: Vector2, area: Vector2) -> void:
+func _add_tiled(texture: Texture2D, at: Vector2, area: Vector2, tint: Color = Color.WHITE) -> void:
 	var sprite := Sprite2D.new()
 	sprite.texture = texture
 	sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
@@ -55,7 +81,7 @@ func _add_tiled(texture: Texture2D, at: Vector2, area: Vector2) -> void:
 	sprite.region_rect = Rect2(Vector2.ZERO, area)
 	sprite.centered = false
 	sprite.position = at
-	sprite.modulate = Color(0.42, 0.48, 0.56, 1.0) if area.x > 400.0 else Color.WHITE
+	sprite.modulate = tint
 	add_child(sprite)
 
 
