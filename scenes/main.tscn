@@ -16,7 +16,7 @@ y_sort_enabled = true
 [node name="Arena" parent="World" instance=ExtResource("2_arena")]
 
 [node name="Player" parent="World" instance=ExtResource("3_player")]
-position = Vector2(272, 160)
+position = Vector2(192, 104)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 

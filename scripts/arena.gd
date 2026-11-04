@@ -1,15 +1,18 @@
 extends Node2D
 class_name Arena
 ## Первая сцена: поляна в тайге.
-## Пол и лес по краю — тайлы Kenney (Roguelike/RPG pack, CC0, 16×16),
-## выложенные через тайлящийся Sprite2D: без швов и без TileSet.
+## Фон — сплошной тёмный лес, поверх — трава поляны, по краю стоят отдельные ели.
+## Так камера никогда не показывает пустоту, а лес читается как стена вокруг поляны.
 
 const TILE := 16
 const TEX_GRASS := preload("res://assets/sprites/grass.png")
-const TEX_PINE := preload("res://assets/sprites/forest.png")
+const TEX_FOREST := preload("res://assets/sprites/forest.png")
 
-@export var room_tiles := Vector2i(34, 18)
-@export var treeline_tiles := 2
+## Насколько фон-лес больше поляны (рисуется с запасом во все стороны).
+const FOREST_MARGIN := 256
+
+@export var room_tiles := Vector2i(24, 13)
+@export var treeline_tiles := 1
 
 var _wall_body: StaticBody2D
 
@@ -18,7 +21,12 @@ func size_px() -> Vector2:
 	return Vector2(room_tiles.x * TILE, room_tiles.y * TILE)
 
 
-## Зона, по которой можно ходить: всё, кроме полосы леса по краю.
+## Границы камеры — ровно поляна.
+func camera_rect() -> Rect2:
+	return Rect2(Vector2.ZERO, size_px())
+
+
+## Зона, по которой можно ходить: всё, кроме полосы деревьев по краю.
 func playable_rect() -> Rect2:
 	var pad := float(treeline_tiles * TILE)
 	return Rect2(Vector2(pad, pad), size_px() - Vector2(pad, pad) * 2.0)
@@ -26,13 +34,15 @@ func playable_rect() -> Rect2:
 
 func _ready() -> void:
 	var s := size_px()
-	var t := float(treeline_tiles * TILE)
 
+	# Сплошной лес за пределами поляны.
+	_add_tiled(
+		TEX_FOREST,
+		Vector2(-FOREST_MARGIN, -FOREST_MARGIN),
+		s + Vector2(FOREST_MARGIN, FOREST_MARGIN) * 2.0
+	)
+	# Сама поляна.
 	_add_tiled(TEX_GRASS, Vector2.ZERO, s)
-	_add_tiled(TEX_PINE, Vector2(0.0, 0.0), Vector2(s.x, t))
-	_add_tiled(TEX_PINE, Vector2(0.0, s.y - t), Vector2(s.x, t))
-	_add_tiled(TEX_PINE, Vector2(0.0, t), Vector2(t, s.y - t * 2.0))
-	_add_tiled(TEX_PINE, Vector2(s.x - t, t), Vector2(t, s.y - t * 2.0))
 
 	_build_walls()
 
@@ -45,6 +55,7 @@ func _add_tiled(texture: Texture2D, at: Vector2, area: Vector2) -> void:
 	sprite.region_rect = Rect2(Vector2.ZERO, area)
 	sprite.centered = false
 	sprite.position = at
+	sprite.modulate = Color(0.42, 0.48, 0.56, 1.0) if area.x > 400.0 else Color.WHITE
 	add_child(sprite)
 
 
