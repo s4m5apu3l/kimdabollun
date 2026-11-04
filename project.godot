@@ -20,8 +20,17 @@ _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]
 
+window/size/viewport_width=960
+window/size/viewport_height=540
+window/size/window_width_override=1920
+window/size/window_height_override=1080
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/stretch/aspect="keep"
+window/stretch/scale_mode="integer"
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=false
 
 [editor_plugins]
 
@@ -34,3 +43,7 @@ enabled=PackedStringArray("res://addons/godot_ai/plugin.cfg")
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+textures/canvas_textures/default_texture_filter=0
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true
+environment/defaults/default_clear_color=Color(0.05, 0.06, 0.09, 1)
