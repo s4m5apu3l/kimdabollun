@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "project": "C:\\Users\\slavk\\Desktop\\vibeode\\kimdabollun\\sakhaly3d",
+  "title": "САХАЛЫ",
+  "orientation": "landscape",
+  "build": {
+    "artifact": "C:\\Users\\slavk\\Desktop\\vibeode\\kimdabollun\\sakhaly3d\\dist\\index.html",
+    "buildId": "a2625d78066d",
+    "bytes": 823814,
+    "title": "САХАЛЫ",
+    "builtAt": "2026-11-06T07:09:52.839Z"
+  },
+  "slots": {
+    "hero": {
+      "label": "Герой",
+      "file": "assets/hero.svg",
+      "transparent": true,
+      "record": {
+        "slot": "hero",
+        "file": "assets/hero.svg",
+        "source": "template",
+        "appliedAt": "2026-11-06T07:06:34.589Z",
+        "license": "MIT (bundled template art, original to dsh-game-studio)",
+        "sha256": "21362671d7b1cbdd0c001760e624410e9ecb66a316440e4427b429f9e4983655"
+      },
+      "history": 0,
+      "candidates": []
+    },
+    "enemy": {
+      "label": "Дух тайги",
+      "file": "assets/enemy.svg",
+      "transparent": true,
+      "record": {
+        "slot": "enemy",
+        "file": "assets/enemy.svg",
+        "source": "template",
+        "appliedAt": "2026-11-06T07:06:34.589Z",
+        "license": "MIT (bundled template art, original to dsh-game-studio)",
+        "sha256": "302bd36736ac145bf290e9e8fe6d3ff0f00582e7a9de68f45ae5af205d843d16"
+      },
+      "history": 0,
+      "candidates": []
+    },
+    "pickup": {
+      "label": "Амулет",
+      "file": "assets/pickup.svg",
+      "transparent": true,
+      "record": {
+        "slot": "pickup",
+        "file": "assets/pickup.svg",
+        "source": "template",
+        "appliedAt": "2026-11-06T07:06:34.589Z",
+        "license": "MIT (bundled template art, original to dsh-game-studio)",
+        "sha256": "c9eaf4bdee19ee88974b9aa69acfd0332a1b58d493be46faf22b61593f6cda3c"
+      },
+      "history": 0,
+      "candidates": []
+    },
+    "background": {
+      "label": "Ground",
+      "file": "assets/ground.svg",
+      "transparent": false,
+      "record": {
+        "slot": "background",
+        "file": "assets/ground.svg",
+        "source": "template",
+        "appliedAt": "2026-11-06T07:06:34.589Z",
+        "license": "MIT (bundled template art, original to dsh-game-studio)",
+        "sha256": "f2eac4e898cc8c3949f262ff5f85486b069b40c7669da54fdb90f4ff2c4e8a59"
+      },
+      "history": 0,
+      "candidates": []
+    }
+  },
+  "spend": {
+    "openaiImages": 0,
+    "openaiUsd": 0,
+    "codexImages": 0,
+    "codexTokens": 0
+  },
+  "jobs": [],
+  "versions": [
+    {
+      "number": 2,
+      "note": "Снежная тайга, духи, амулеты: 3D-версия САХАЛЫ",
+      "createdAt": "2026-11-06T07:09:52.854Z",
+      "buildId": "a2625d78066d"
+    },
+    {
+      "number": 1,
+      "note": "Created from the voxel template",
+      "createdAt": "2026-11-06T07:06:34.657Z",
+      "buildId": "d9c31af74d35"
+    }
+  ],
+  "share": null,
+  "updatedAt": "2026-11-06T07:09:52.865Z"
+}

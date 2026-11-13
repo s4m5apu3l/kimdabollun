@@ -1,0 +1,1 @@
+medieval_peasant_man_bro-Idle.png: 9 cols x 24 rows, cell 152x117, row0 = idle 8 dirs, rows1-8 = walk 8 dirs

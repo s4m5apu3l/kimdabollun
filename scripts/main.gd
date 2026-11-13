@@ -4,13 +4,19 @@ extends Node2D
 
 const SPRITE_SHADOW := preload("res://assets/sprites/shadow_blob.png")
 
-## Декор из Tiny Swords: [файл, позиция ступней].
+## Декор: [путь, позиция ступней].
 const DECO := [
-	["deco_18.png", Vector2(300.0, 240.0)],
-	["deco_16.png", Vector2(760.0, 210.0)],
-	["deco_17.png", Vector2(700.0, 430.0)],
-	["deco_09.png", Vector2(170.0, 430.0)],
+	["res://assets/new/tree_a.png", Vector2(180.0, 200.0)],
+	["res://assets/new/tree_b.png", Vector2(300.0, 430.0)],
+	["res://assets/new/tree_c.png", Vector2(800.0, 190.0)],
+	["res://assets/new/tree_d.png", Vector2(720.0, 420.0)],
+	["res://assets/new/stone.png", Vector2(600.0, 300.0)],
+	["res://assets/new/stone.png", Vector2(360.0, 160.0)],
+	["res://assets/new/bonfire.png", Vector2(480.0, 400.0)],
 ]
+
+## Кострище стоит здесь, над ним играет огонь.
+const FLAME_AT := Vector2(480.0, 356.0)
 
 var _arena: Arena
 var _player: Player
@@ -32,8 +38,25 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _spawn_decor() -> void:
 	for item in DECO:
-		var path: String = "res://assets/tiny-swords/deco/" + String(item[0])
-		_add_prop(load(path), item[1])
+		_add_prop(load(String(item[0])), item[1])
+	_add_flame()
+
+
+func _add_flame() -> void:
+	var frames := SpriteFrames.new()
+	if frames.has_animation("default"):
+		frames.remove_animation("default")
+	frames.add_animation("fire")
+	frames.set_animation_speed("fire", 8.0)
+	frames.set_animation_loop("fire", true)
+	for i in 5:
+		frames.add_frame("fire", load("res://assets/new/flame_%03d.png" % i))
+
+	var flame := AnimatedSprite2D.new()
+	flame.sprite_frames = frames
+	flame.position = FLAME_AT
+	flame.play("fire")
+	$World.add_child(flame)
 
 
 func _add_prop(texture: Texture2D, at: Vector2) -> void:

@@ -1,0 +1,17 @@
+{
+  "number": 1,
+  "buildId": "d9c31af74d35",
+  "createdAt": "2026-11-06T07:06:34.657Z",
+  "note": "Created from the voxel template",
+  "title": "САХАЛЫ",
+  "bytes": 819895,
+  "files": {
+    "game.js": "bd420a376ee47e9f5eca44e1c96de4952b419df652330bb5b2cb0eb1ad819a34",
+    "game.json": "e18d98d4029f2130360fc05af18a261dcd26f808e4cdc999a2941bc96bf4742b",
+    "assets/ASSETS.json": "e32918edb4c7dcf5dd58140c05582ce66458a6b44d9d8d08c0740bddc7a8c389",
+    "assets/enemy.svg": "302bd36736ac145bf290e9e8fe6d3ff0f00582e7a9de68f45ae5af205d843d16",
+    "assets/ground.svg": "f2eac4e898cc8c3949f262ff5f85486b069b40c7669da54fdb90f4ff2c4e8a59",
+    "assets/hero.svg": "21362671d7b1cbdd0c001760e624410e9ecb66a316440e4427b429f9e4983655",
+    "assets/pickup.svg": "c9eaf4bdee19ee88974b9aa69acfd0332a1b58d493be46faf22b61593f6cda3c"
+  }
+}

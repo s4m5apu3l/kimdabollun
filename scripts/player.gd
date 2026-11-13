@@ -10,7 +10,9 @@ const FRICTION := 2000.0
 const FRAME_DIR := "res://assets/sprites/hero/"
 const RUN_FRAMES := 6
 const RUN_FPS := 12.0
-const CELL := 96.0
+const CELL_W := 152.0
+const CELL_H := 104.0
+const FEET_Y := 81.0
 
 ## 8 направлений: код кадра и вектор.
 const DIRS := [
@@ -36,7 +38,8 @@ var _current := ""
 
 func _ready() -> void:
 	hero.sprite_frames = _build_frames()
-	hero.offset = Vector2(0.0, -CELL * 0.5)
+	hero.centered = false
+	hero.offset = Vector2(-CELL_W * 0.5, -FEET_Y)
 	_play("idle_" + direction)
 
 
@@ -111,3 +114,9 @@ func _clamp_to_arena() -> void:
 	if _bounds.size == Vector2.ZERO:
 		return
 	global_position = global_position.clamp(_bounds.position, _bounds.end)
+
+
+func _draw() -> void:
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.38))
+	draw_circle(Vector2(0.0, -2.0), 16.0, Color(0.0, 0.0, 0.0, 0.30))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

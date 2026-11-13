@@ -1,0 +1,17 @@
+{
+  "number": 2,
+  "buildId": "a2625d78066d",
+  "createdAt": "2026-11-06T07:09:52.854Z",
+  "note": "Снежная тайга, духи, амулеты: 3D-версия САХАЛЫ",
+  "title": "САХАЛЫ",
+  "bytes": 823814,
+  "files": {
+    "game.js": "d815d36d27f032b83cc9d6b46450204a4f3abe17f12d6337c2bafb53545e648e",
+    "game.json": "c6816cfe289c2d05df3bf94b092a4a9a1f5fbff41f6abf27d7b4e9cefc99ee2f",
+    "assets/ASSETS.json": "e32918edb4c7dcf5dd58140c05582ce66458a6b44d9d8d08c0740bddc7a8c389",
+    "assets/enemy.svg": "302bd36736ac145bf290e9e8fe6d3ff0f00582e7a9de68f45ae5af205d843d16",
+    "assets/ground.svg": "f2eac4e898cc8c3949f262ff5f85486b069b40c7669da54fdb90f4ff2c4e8a59",
+    "assets/hero.svg": "21362671d7b1cbdd0c001760e624410e9ecb66a316440e4427b429f9e4983655",
+    "assets/pickup.svg": "c9eaf4bdee19ee88974b9aa69acfd0332a1b58d493be46faf22b61593f6cda3c"
+  }
+}
