@@ -88,6 +88,15 @@ func _maybe_capture() -> void:
 	_save_shot("res://shot_walk.png")
 	Input.action_release("move_right")
 
+	# Атака вправо: проверяем, что кадры выпада действительно вправо.
+	Input.action_press("move_right")
+	await get_tree().create_timer(0.2).timeout
+	Input.action_release("move_right")
+	Input.action_press("attack")
+	await get_tree().create_timer(0.25).timeout
+	_save_shot("res://shot_attack.png")
+	Input.action_release("attack")
+
 	var corner := _arena.playable_rect().position + Vector2(40.0, 40.0)
 	_player.global_position = corner
 	_player.camera.reset_smoothing()

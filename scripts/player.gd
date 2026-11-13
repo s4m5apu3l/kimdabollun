@@ -1,36 +1,29 @@
 extends CharacterBody2D
 class_name Player
-## Герой из атласа Pixel_art_character_chib (8 направлений: стойка + бег).
-## Origin — по центру ступней: ячейка 96×96 поднята на половину высоты.
+## Герой-крестьянин. Четыре направления: юг, восток, север, запад (запад = отражение).
+## Origin по центру ступней: ячейка 152×104, ступни на y=81.
 
 const SPEED := 165.0
 const ACCEL := 1400.0
 const FRICTION := 2000.0
 
 const FRAME_DIR := "res://assets/sprites/hero/"
-const RUN_FRAMES := 6
+const FRAMES := 9
 const RUN_FPS := 12.0
+const ATK_FPS := 16.0
+
 const CELL_W := 152.0
 const CELL_H := 104.0
 const FEET_Y := 81.0
 
-## 8 направлений: код кадра и вектор.
-const DIRS := [
-	{"code": "e", "v": Vector2(1.0, 0.0)},
-	{"code": "se", "v": Vector2(1.0, 1.0)},
-	{"code": "s", "v": Vector2(0.0, 1.0)},
-	{"code": "sw", "v": Vector2(-1.0, 1.0)},
-	{"code": "w", "v": Vector2(-1.0, 0.0)},
-	{"code": "nw", "v": Vector2(-1.0, -1.0)},
-	{"code": "n", "v": Vector2(0.0, -1.0)},
-	{"code": "ne", "v": Vector2(1.0, -1.0)},
-]
+const DIRS := ["s", "e", "n", "w"]
 
 var facing := Vector2.DOWN
 var direction := "s"
 
 var _bounds := Rect2()
 var _current := ""
+var _attack_time := 0.0
 
 @onready var hero: AnimatedSprite2D = $Hero
 @onready var camera: Camera2D = $Camera2D
@@ -40,7 +33,7 @@ func _ready() -> void:
 	hero.sprite_frames = _build_frames()
 	hero.centered = false
 	hero.offset = Vector2(-CELL_W * 0.5, -FEET_Y)
-	_play("idle_" + direction)
+	_play("idle_s")
 
 
 func _build_frames() -> SpriteFrames:
@@ -48,21 +41,28 @@ func _build_frames() -> SpriteFrames:
 	if frames.has_animation("default"):
 		frames.remove_animation("default")
 
-	for d in DIRS:
-		var code: String = d["code"]
+	for code in DIRS:
+		var source: String = "e" if code == "w" else code
 
 		var idle: String = "idle_" + code
 		frames.add_animation(idle)
 		frames.set_animation_speed(idle, 1.0)
 		frames.set_animation_loop(idle, false)
-		frames.add_frame(idle, load(FRAME_DIR + "idle_%s.png" % code))
+		frames.add_frame(idle, load(FRAME_DIR + "idle_%s.png" % source))
 
 		var run: String = "run_" + code
 		frames.add_animation(run)
 		frames.set_animation_speed(run, RUN_FPS)
 		frames.set_animation_loop(run, true)
-		for i in RUN_FRAMES:
-			frames.add_frame(run, load(FRAME_DIR + "run_%s_%d.png" % [code, i]))
+		for i in FRAMES:
+			frames.add_frame(run, load(FRAME_DIR + "run_%s_%d.png" % [source, i]))
+
+		var atk: String = "atk_" + code
+		frames.add_animation(atk)
+		frames.set_animation_speed(atk, ATK_FPS)
+		frames.set_animation_loop(atk, false)
+		for i in FRAMES:
+			frames.add_frame(atk, load(FRAME_DIR + "atk_%s_%d.png" % [source, i]))
 
 	return frames
 
@@ -79,34 +79,49 @@ func set_bounds(walk_rect: Rect2, camera_rect: Rect2 = Rect2()) -> void:
 func _physics_process(delta: float) -> void:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 
-	if input_dir == Vector2.ZERO:
-		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
-	else:
-		velocity = velocity.move_toward(input_dir * SPEED, ACCEL * delta)
+	if _attack_time > 0.0:
+		_attack_time -= delta
+
+	if input_dir != Vector2.ZERO:
 		facing = input_dir.normalized()
-		direction = _dir_code(input_dir)
+		direction = _dir_code(facing)
+
+	if _attack_time > 0.0:
+		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * 2.0 * delta)
+	else:
+		if Input.is_action_just_pressed("attack"):
+			_start_attack()
+		if input_dir == Vector2.ZERO:
+			velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
+		else:
+			velocity = velocity.move_toward(input_dir * SPEED, ACCEL * delta)
 
 	move_and_slide()
 	_clamp_to_arena()
+
+	if _attack_time > 0.0:
+		return
 	_play(("run_" if input_dir != Vector2.ZERO else "idle_") + direction)
 
 
+func _start_attack() -> void:
+	_attack_time = float(FRAMES) / ATK_FPS
+	_play("atk_" + direction)
+
+
 func _dir_code(v: Vector2) -> String:
-	var best := "s"
-	var best_dot := -2.0
-	var n := v.normalized()
-	for d in DIRS:
-		var dot: float = n.dot((d["v"] as Vector2).normalized())
-		if dot > best_dot:
-			best_dot = dot
-			best = d["code"]
-	return best
+	if absf(v.x) >= absf(v.y):
+		return "e" if v.x >= 0.0 else "w"
+	return "s" if v.y >= 0.0 else "n"
 
 
 func _play(animation: String) -> void:
+	var flip := animation.ends_with("_w")
 	if _current == animation:
+		hero.flip_h = flip
 		return
 	_current = animation
+	hero.flip_h = flip
 	hero.play(animation)
 
 

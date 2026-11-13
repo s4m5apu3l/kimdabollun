@@ -1,10 +1,14 @@
-"""Режет новый герой (medieval_peasant_man_bro) на кадры.
+"""Нарезка героя-крестьянина по фактическим направлениям.
 
-Сетка листа: 9 колонок × 24 строки, ячейка 152×117.
-  строка 0      — стойка в 8 направлениях (по кадрам)
-  строки 1..8   — ходьба в 8 направлениях, по 9 кадров
-Порядок направлений как в прошлом атласе: s, se, e, ne, n, nw, w, sw.
-Ступни в ячейке на y=81.
+Лист: 9 колонок × 27 строк, ячейка 152×104.
+Проверено по пикселям лица:
+  строка 1  — лицо анфас, стойка (юг)
+  строка 3  — корпус вправо, копьё вправо (восток)
+  строка 7  — спина (север)
+  строка 17 — выпад вправо/вперёд (атака, юг)
+  строка 19 — выпад (восток)
+  строка 23 — выпад, спина (север)
+Запад получаем отражением восточных кадров.
 """
 import os
 from PIL import Image
@@ -12,26 +16,33 @@ from PIL import Image
 SRC = r"C:\Users\slavk\Downloads\Telegram Desktop\medieval_peasant_man_bro-Idle.png"
 OUT = r"C:\Users\slavk\Desktop\vibeode\kimdabollun\assets\sprites\hero"
 
-CELL_W, CELL_H = 152, 117
-CODES = ["s", "se", "e", "ne", "n", "nw", "w", "sw"]
-WALK_FRAMES = 6
+CELL_W, CELL_H = 152, 104
+FRAMES = 9
+
+IDLE_ROW = {"s": 1, "e": 3, "n": 7}
+ATTACK_ROW = {"s": 17, "e": 19, "n": 23}
 
 
 def main():
     os.makedirs(OUT, exist_ok=True)
+    for f in os.listdir(OUT):
+        if f.endswith(".png"):
+            os.remove(os.path.join(OUT, f))
+
     img = Image.open(SRC).convert("RGBA")
 
-    for i, code in enumerate(CODES):
-        idle = img.crop((i * CELL_W, 0, (i + 1) * CELL_W, CELL_H))
-        idle.save(f"{OUT}\\idle_{code}.png")
+    for code, row in IDLE_ROW.items():
+        for i in range(FRAMES):
+            cell = img.crop((i * CELL_W, row * CELL_H, (i + 1) * CELL_W, (row + 1) * CELL_H))
+            cell.save(f"{OUT}\\run_{code}_{i}.png")
+        img.crop((0, row * CELL_H, CELL_W, (row + 1) * CELL_H)).save(f"{OUT}\\idle_{code}.png")
 
-    for i, code in enumerate(CODES):
-        row = 1 + i
-        for f in range(WALK_FRAMES):
-            cell = img.crop((f * CELL_W, row * CELL_H, (f + 1) * CELL_W, (row + 1) * CELL_H))
-            cell.save(f"{OUT}\\run_{code}_{f}.png")
+    for code, row in ATTACK_ROW.items():
+        for i in range(FRAMES):
+            cell = img.crop((i * CELL_W, row * CELL_H, (i + 1) * CELL_W, (row + 1) * CELL_H))
+            cell.save(f"{OUT}\\atk_{code}_{i}.png")
 
-    print("idle", len(CODES), "run", len(CODES) * WALK_FRAMES)
+    print("idle/run:", len(IDLE_ROW) * FRAMES, "attack:", len(ATTACK_ROW) * FRAMES)
 
 
 main()

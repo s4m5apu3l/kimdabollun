@@ -45,4 +45,4 @@ offset_top = 517.0
 offset_right = 820.0
 offset_bottom = 537.0
 theme_override_font_sizes/font_size = 13
-text = "WASD / стрелки — движение      ·      Esc — выход"
+text = "WASD / стрелки: движение    ·    Space или ЛКМ: удар    ·    Esc: выход"
